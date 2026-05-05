@@ -1,0 +1,38 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Model weights (VERY IMPORTANT)
+*.pt
+*.pth
+
+# Large datasets
+synthetic_dataset_v2/
+unlabeled_vibration_*/
+
+# Generated / uploaded data
+uploads/
+selected_for_labeling.*
+
+# Logs / temp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Pickle files (optional - depends)
+*.pkl

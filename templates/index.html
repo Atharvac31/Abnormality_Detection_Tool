@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Analyzer | Signal Analysis Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('/static/css/style.css');
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <a href="/pipeline">
+                <button class="analyze-btn" style="margin-top:10px;">
+                🔬 View Full Pipeline
+                </button>
+            </a>
+            <h1>Graph Analysis Tool</h1>
+            <p class="subtitle">Upload any graph image (scaled or unscaled) to analyze signal behavior and extract meaningful insights.</p>
+        </header>
+
+        <main>
+            <div class="card upload-card">
+                <div class="card-title">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Graph Image</span>
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+    <div class="upload-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+    </div>
+    <div class="upload-text">Drag & drop your graph image here</div>
+    <div class="upload-subtext">or click to browse files</div>
+    
+    <!-- Remove the label wrapping the button -->
+    <div class="file-input-wrapper">
+        <input type="file" name="image" id="imageInput" class="file-input" accept="image/*">
+        <button type="button" class="file-label" id="browseBtn">
+            <i class="fas fa-folder-open"></i>
+            Browse Files
+        </button>
+    </div>
+</div>
+                
+                <div class="selected-file" id="selectedFile">
+                    <div class="file-icon">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name" id="fileName">No file selected</div>
+                        <div class="file-size" id="fileSize">-</div>
+                    </div>
+                    <button class="remove-file" id="removeFile">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <button class="analyze-btn" id="analyzeBtn" disabled>
+                    <i class="fas fa-search"></i>
+                    Analyze Graph
+                </button>
+            </div>
+ <!-- ======================================================
+     UNSCALED GRAPH OPTIONS (HIDDEN BY DEFAULT)
+====================================================== -->
+<div id="unscaledOptions">
+    <h3>Unscaled Graph Settings</h3>
+
+    <div class="unscaled-grid">
+
+        <!-- Y Axis Meaning -->
+        <div class="unscaled-field">
+            <label for="yAxis">Y-axis meaning</label>
+            <select id="yAxis">
+                <option value="">Select</option>
+                <option value="vibration">Vibration / Amplitude</option>
+                <option value="temperature">Temperature</option>
+                <option value="pressure">Pressure</option>
+                <option value="generic">Generic signal</option>
+            </select>
+        </div>
+
+        <!-- Y Axis Unit -->
+        <div class="unscaled-field">
+<label>Y-axis unit (optional)</label>
+<select id="yUnit">
+    <option value="">Select unit</option>
+    <option value="mm/s">mm/s</option>
+    <option value="°C">°C</option>
+    <option value="bar">bar</option>
+    <option value="V">Volt</option>
+    <option value="A">Ampere</option>
+    <option value="custom">Custom</option>
+</select>
+        </div>
+
+        <!-- Y Min -->
+        <div class="unscaled-field">
+            <label for="yMin">Y-axis minimum (optional)</label>
+            <input id="yMin" type="number" step="any" placeholder="e.g. 0">
+        </div>
+
+        <!-- Y Max -->
+        <div class="unscaled-field">
+            <label for="yMax">Y-axis maximum (optional)</label>
+            <input id="yMax" type="number" step="any" placeholder="e.g. 120">
+        </div>
+
+        <!-- X Axis Meaning -->
+        <div class="unscaled-field">
+            <label for="xAxis">X-axis meaning</label>
+            <select id="xAxis">
+                <option value="">Select</option>
+                <option value="time">Time</option>
+                <option value="index">Sample index</option>
+                <option value="distance">Distance</option>
+            </select>
+        </div>
+
+        <!-- Sampling Rate -->
+        <div class="unscaled-field">
+            <label for="samplingRate">Sampling rate (optional)</label>
+            <input id="samplingRate" type="number" step="any" placeholder="e.g. 100 Hz">
+        </div>
+
+        <!-- Expected Behavior -->
+        <div class="unscaled-field">
+            <label for="behavior">Expected behavior</label>
+            <select id="behavior">
+                <option value="">Select</option>
+                <option value="stable">Stable</option>
+                <option value="cyclic">Cyclic</option>
+                <option value="increasing">Increasing</option>
+                <option value="decreasing">Decreasing</option>
+            </select>
+        </div>
+
+        <!-- Sensitivity -->
+        <div class="unscaled-field">
+            <label for="sensitivity">Detection sensitivity</label>
+            <select id="sensitivity">
+                <option value="">Select</option>
+                <option value="low">Low (strict)</option>
+                <option value="medium">Medium (balanced)</option>
+                <option value="high">High (early detection)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="unscaled-hint">
+        These inputs are optional. Providing real units or axis ranges enables more precise abnormality detection.
+    </div>
+</div>
+
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your graph image. This may take a few seconds...</p>
+            </div>
+            
+            <div class="card result-card" id="resultCard">
+                <div class="result-header">
+                    <div class="result-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Analysis Results
+                    </div>
+                    <div class="status-badge" id="statusBadge">Unknown</div>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Graph Type</div>
+                        <div class="info-value" id="graphType">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Confidence</div>
+                        <div class="info-value confidence" id="confidence">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Analysis Time</div>
+                        <div class="info-value" id="analysisTime">-</div>
+                    </div>
+                </div>
+                
+                <div class="trend-box">
+                    <div class="trend-title">Trend Analysis</div>
+                    <div id="trendText">No trend data available.</div>
+                </div>
+                
+                <div class="card-title">
+                    <i class="fas fa-list-check"></i>
+                    <span>Triggered Rules</span>
+                </div>
+                <ul class="rules-list" id="rulesList">
+                    <li>No rules triggered.</li>
+                </ul>
+                <!-- ================= EXPLAINABILITY ================= -->
+    <div class="card-title">
+        <i class="fas fa-brain"></i>
+    <span>Analysis Explanation</span>
+</div>
+
+<div id="severityBox" class="explain-box severity"></div>
+
+<div id="summaryBox" class="explain-box summary"></div>
+
+<div id="whyBox" class="explain-box">
+  <h4>Why this was flagged</h4>
+  <ul id="whyList"></ul>
+</div>
+
+<div id="fixBox" class="explain-box">
+  <h4>What could improve this</h4>
+  <ul id="fixList"></ul>
+</div>
+
+                <div class="card-title">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Extracted Features</span>
+                </div>
+                <ul class="features-list" id="featuresList">
+                    <li>
+                        <span class="feature-name">No features extracted.</span>
+                        <span class="feature-value">-</span>
+                    </li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Graph Analyzer &copy; <span id="currentYear"></span> | Signal Analysis Tool</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-question-circle"></i> Documentation</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+   <script src="/static/js/app.js"></script>
+
+</body>
+</html>

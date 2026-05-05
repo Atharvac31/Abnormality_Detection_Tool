@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pipeline View</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .pipeline-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        .step-card {
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            border-top: 6px solid var(--primary);
+        }
+
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-content {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .arrow {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1 class="pipeline-title">🔍 ML Pipeline View</h1>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <input type="file" id="pipelineFile" hidden />
+        <button class="upload-btn" onclick="document.getElementById('pipelineFile').click()">
+            📁 Upload Image
+        </button>
+
+        <span id="fileNameDisplay"></span>
+
+        
+        <button class="run-btn" onclick="runJointPipeline()">🔥 Joint Learning View</button>
+    </div>
+
+    <!-- Pipeline Steps -->
+    <div class="pipeline-vertical" id="pipelineContainer"></div>
+
+</div>
+
+<script src="/static/js/pipeline.js"></script>
+</body>
+</html>
